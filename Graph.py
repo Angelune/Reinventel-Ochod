@@ -13,8 +13,10 @@ class Graph:
         
     def __init__(self):
         self.poids = [] # liste de nbCouches array (tableaux)
+        self.biais = []
         self.noeud = [] # liste de nbCouches array (listes)
-        self.gradient = [] # liste de nbCouches gradients (listes)
+        self.gradientNoeuds = [] # liste de nbCouches gradients (listes)
+        self.gradientPoids = [] # liste de nbCouches gradients (listes)
         self.nbCouches = 0
         self.pas = 0
 
@@ -22,6 +24,15 @@ class Graph:
         
 
     def parametrer(self):
+    #TODO
+    #Changer la taille des matrices poids pour pas qu'ils prennent en compte la biais. ( puis on fait le .append)
+    #initialiser les deux matrices gradients avec la bonne taille 
+    #Pas besoin d'initialiser les noeuds ils vont être recalculer anyways. A part pour l'entrée.
+    #Pertinance de construire une matrice des dimentions pour s'assurer qu'on part pas dans le décors ? 
+
+
+
+
         print("Combien de couches a le réseaux, entrées et sorties incluses")
         self.nbCouches = int(input())
 
@@ -38,16 +49,24 @@ class Graph:
             nbNeurones = int(input ())
 
             
-            self.noeud.append(np.ones(nbNeurones+1)) #Initialisés à 1 seront calculé dans le premier passage en avant. Le +1 est pour le biais.  
-            self.poids.append(np.random.random_sample((nbNeurones+1,nbNeuronesPreced+1))) #poids initialisés aléatoirement entre 0 et 1. ATTENTION PAS DE BIAIS SUR LA DERNIERE COUCHE
-            self.gradient.append(np.ones(nbNeurones+1))
-            
+            self.noeud.append(np.ones(nbNeurones)) #Initialisés à 1 seront calculé dans le premier passage en avant.  
+            self.biais.append(np.random.random_sample(nbNeurones))
+            self.poids.append(np.random.random_sample((nbNeurones,nbNeuronesPreced))) #poids initialisés aléatoirement entre 0 et 1.
+            #TODO
+            #self.gradient.append(np.ones(nbNeurones))
             #self.gradient.append(grad.Gradient(nbNeurones))
             
             nbNeuronesPreced = nbNeurones
     
 
     def parametrerPoidsFixes(self, lesPoids):
+    #TODO
+    #Changer la taille des matrices poids pour pas qu'ils prennent en compte la biais. ( puis on fait le .append)
+    #initialiser les deux matrices gradients avec la bonne taille 
+    #Pas besoin d'initialiser les noeuds ils vont être recalculer anyways. A part pour l'entrée.
+    #Pertinance de construire une matrice des dimentions pour s'assurer qu'on part pas dans le décors ? 
+
+
         print("parametrer - Combien de couches a le réseaux, entrées et sorties incluses")
         self.nbCouches = int(input())
 
@@ -65,21 +84,25 @@ class Graph:
             print(txt.format(i))
             nbNeurones = int(input ())
             self.noeud.append(np.ones(nbNeurones+1)) #Initialisés à 1 seront calculé dans le premier passage en avant. Le +1 est pour le biais.                
-            self.gradient.append(np.ones(nbNeurones+1))
+            #TODO
+            #self.gradient.append(np.ones(nbNeurones+1))
+            #self.gradient.append(np.ones(nbNeurones+1))
             nbNeuronesPreced = nbNeurones
         
         print("Combien de neurones possède la dernière couche")
         nbNeurones = int(input ())
         self.noeud.append(np.ones(nbNeurones)) #Initialisés à 1 seront calculé dans le premier passage en avant.                
-        self.gradient.append(np.ones(nbNeurones))
+        #TODO
+        #self.gradient.append(np.ones(nbNeurones))
+        #self.gradient.append(np.ones(nbNeurones))
     
 
 
     def passageForward(self, entree):
+    #TODO
+    # Attention les matrices poids vont changer de taille 
+    
     # entrée est un array qui contient les valeurs de l'entrée. Il faut que la taille corresponde 
-      
-        #if (entree is np.array): print("c'est reconnu array")
-        #else :  print ("c'est pas")
         
         if(len(entree) == len(self.noeud[0])):
             self.noeud[0] = np.append(entree,1)
@@ -94,14 +117,29 @@ class Graph:
    
    
     def passageBackward(self):
-    #passer les paramètres nbCouche et tout en paramètres pour pas les redemander à chaque fois
+    # Permets de calculer les gradients associés a chaques poids. Ils sont rangés dans une matrice de la même 
+    # taille que celle des poids ()
+
+
                
         for i in range(self.nbCouches-2,0,-1):
             
             self.gradient[i] = (self.gradient[i+1]*self.sigmPrime(self.noeud[i+1])).dot(self.poids[i])
 
             print (self.gradient[i])
+
+
+
+
+        
             #assert self.gradient[i].shape == self.nbCouches
+
+    def Apprentissage(self):
+    #mets a jour les poids en fonction des poids et des gradients associés pdt les deux passages 
+
+        for i in range(1,self.nbCouches):
+            print ('')
+            
 
 
 
